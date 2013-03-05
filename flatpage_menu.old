@@ -1,0 +1,20 @@
+from django.template import Library, Node
+register = Library()
+
+def flatpage_menu():
+    # Create an unordered list of all flatpages
+    #pages = FlatPage.objects.all()
+    pages = {}
+    pages['Realtime performance'] = '/query/'
+    pages['Onload stats'] = '/'
+    pages['Graphs'] = '/graphs/'
+    pages['Machines'] = '/machines/'
+    pages['Contact'] ='/contact/'
+    
+    menu = "<div class='container navigation' style='font-size:120%;'><div class='col nav'>"
+    for k,  v in pages.iteritems():
+        menu += '<li>'+'<a href="'+ v +'" title="'+k+'">'+k+'</a></li>'
+    menu += '</ul></ul>'
+    return menu 
+
+register.simple_tag(flatpage_menu)

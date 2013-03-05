@@ -1,0 +1,28 @@
+tr:hover {
+    background-color: #c5c5c5;
+ }
+
+ .dashboard {
+ 		background-color: #ededed;
+ 		-moz-border-radius: 15px;
+ 		-webkit-border-radius: 15px;
+ 		border-radius: 15px;
+ 		border: 1px solid #666;
+ 		margin: 20px;
+ 		padding: 20px;
+ }
+
+ a {
+ 	color:  #005689;
+ 	text-decoration: none;
+ }
+
+.notification {
+	float: right;
+	display: block;
+	margin-bottom: 15px;
+}
+
+
+
+

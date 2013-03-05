@@ -1,0 +1,104 @@
+{% load flatpage_menu %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>jQuery UI Datepicker - Default functionality</title>
+	<link rel="stylesheet" href="/site_media/ui/development-bundle/themes/base/jquery.ui.all.css">
+	<script src="/site_media/ui/development-bundle/jquery-1.7.1.js"></script>
+	<script src="/site_media/ui/development-bundle/ui/jquery.ui.core.js"></script>
+	<script src="/site_media/ui/development-bundle/ui/jquery.ui.widget.js"></script>
+	<script src="/site_media/ui/development-bundle/ui/jquery.ui.datepicker.js"></script>
+    <link href="/site_media/admin/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/site_media/admin/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="/site_media/styles.css">
+	<script>
+	$(function() {
+		$( "#datepicker" ).datepicker();
+	});
+	</script>
+<script type="text/javascript">
+$(function(){
+var placeholder = $("#placeholder");
+var datasets=new Array();
+var legends = $("#legend .legendLabel");
+legends.each(function () {
+        // fix the widths so they don't jump around
+        $(this).css('width', $(this).width());
+    });
+datasets ={{json_graph_data|safe}};
+var options = {series: {
+      lines: { show: true}
+    }, xaxis: { mode: "time" }, legend: { container: $("#legend") },  crosshair: { mode: "x" }, grid: { hoverable: true, autoHighlight: false }};
+/*var MyTimestamps= {{timestamps_list}};
+var MyBufs= {{snd_buf_list}};*/
+var updateLegendTimeout = null;
+var latestPosition = null;
+$('#history_query').change(function () {
+        var parameterValue = $("#choose-parameter-type").val();
+        /*alert('Handler for .change() called.' +parameterValue);*/
+        if (parameterValue!="None") {fetch_parameter_Data();}
+        
+        function fetch_parameter_Data() {
+        $.ajax({
+            type: 'GET',
+            url: "/historySearch",
+            data: {parameter_type: parameterValue},
+            dataType: 'json',
+            success: function(series) {
+                        /*alert(JSON.stringify(series));*/
+                        var JSONdata=eval(series); 
+                        var i = 0;
+                        $.each(series, function(key, val) {
+                                val.color = i;
+                                 ++i;
+                        });
+                        $("#choices").empty();
+                        $("#legend").empty();
+                        $.each(JSONdata, function(key, val) {
+                        choiceContainer.append('<tr><td>'+'<input type="checkbox" id="' + key +'" checked="checked" value="Bike" name="'+key+'" /> </td><td>'
+                                + val.label + '</td></tr>');
+                        });
+                        choiceContainer.find("input").click(plotAccordingToChoices);
+
+                        function plotAccordingToChoices() {
+                            var data = [];
+                            choiceContainer.find("input:checked").each(function () {
+                            var key = $(this).attr("name");
+                            if (key && JSONdata[key])
+                                        data.push(JSONdata[key]);
+                            });
+
+                            if (data.length > 0)
+                            $.plot($("#placeholder"), data, options);
+                         }
+                         plotAccordingToChoices();
+                   }    
+        })
+        //alert('fetch_month_data is executed .' +parameterValue);
+     }
+            
+         
+});
+</script>
+</head>
+<body>
+{% flatpage_menu %}
+<div class="container">
+<div class="hero-unit">
+<div class="row">
+        <div class="span8">
+<p>Choose date and and parameter:</p>
+<p>Date: <input type="text" id="datepicker"> <select class="form-select" id="history_query" ><option value="unused">unused</option><option value="bytes_acked">bytes_acked</option><option value="cur">cur</option><option value="rttvar">rttvar</option><option value="rto">rto</option><option value="zwins">zwins</option></select>
+</p>
+<div>
+<div class="row">
+        <div class="span8">
+          <div id="placeholder" style="width:800px;height:300px; padding-left:20px" color="blue"></div>   
+        </div>
+</div>
+</div>
+</div>
+
+</body>
+</html>

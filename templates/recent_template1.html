@@ -1,0 +1,270 @@
+﻿{% load flatpage_menu %}
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="/site_media/admin/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="/site_media/table_js/sh_main.min.js"></script>
+    <script type="text/javascript" src="/site_media/table_js/sh_javascript.js"></script>
+   <script type="text/javascript" language="javascript" src="/site_media/DataTables/media/js/jquery.dataTables.js"></script>
+    <script language="javascript" type="text/javascript" src="/site_media/flot/excanvas.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/site_media/flot/jquery.flot.js"></script>
+    <link href="/site_media/admin/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/site_media/admin/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="/site_media/reset-min.css">
+    <link type="text/css" rel="stylesheet" href="/site_media/styles1.css">
+    <script type="text/javascript" charset="utf-8">
+$(document).ready(function() {
+var placeholder = $("#placeholder");
+var datasets=new Array();
+var legends = $("#legend .legendLabel");
+legends.each(function () {
+        // fix the widths so they don't jump around
+        $(this).css('width', $(this).width());
+    });
+datasets ={{json_graph_data|safe}};
+var options = {series: {
+      lines: { show: true}
+    }, xaxis: { mode: "time" }, crosshair: { mode: "x" }, grid: { hoverable: true, autoHighlight: false }};
+
+
+$.plot(placeholder, datasets, options);
+
+var giCount = 1;
+var table = $('#example').dataTable({
+                       "aaSorting": [[ 0, "desc" ]],
+                        "bPaginate": true,
+                        "bLengthChange": true,
+                        "bFilter": false,
+                        "bSort": true,
+                        "bInfo": true,
+                        "bAutoWidth": true,
+                        "fnDestroy": true,
+                        "bRetrieve": true,
+                        "aoColumns": [
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        {"bAutowidth": false},
+                                        null //put as many null values as your columns
+
+                          ],
+                          "fnRowCallback": function(nRow, aData, iDisplayIndex, iRowIndex) {
+                                                               if (aData[6] == ("red")) {
+                                                                        $('td:eq(0)', nRow).css("background", "#FFFFCC");
+                                                                        }
+                                                                else if (aData[6] == 'green') {
+                                                                        $('td:eq(0)', nRow).css("background", "green");
+                                                                        }
+                                                                return nRow;
+                                                        },
+                            "oLanguage": { "sLengthMenu": "Display records per page _MENU_"}
+
+                    });
+table.fnSetColumnVis( 6, false );
+
+function pad2(number) {
+    return (number < 10 ? '0' : '') + number
+    }
+
+function timeFormatting(timestamp) {
+    var given_date_time = new Date(parseFloat(timestamp));
+                               
+    var hours = given_date_time.getHours();
+                                // minutes part from the timestamp
+    var minutes = given_date_time.getMinutes();
+                                // seconds part from the timestamp
+    var seconds = given_date_time.getSeconds();
+    var formattedTime = pad2(hours) + ':' + pad2(minutes) + ':' + pad2(seconds);
+    return formattedTime
+}
+                    
+function statsUpdate() {
+            $.ajax({
+            type: 'GET',
+            url: "/statsUpdate",
+            dataType: 'text',
+            success: function(series) {
+                  // alert(table.dataTable["bPaginate"]);
+                   table.fnClearTable();
+                        myData = JSON.parse(series);
+                        for (var key in myData) {
+                               if (myData.hasOwnProperty(key)) {
+                                    table.fnAddData([
+                                                            timeFormatting(myData[key].timestamp),
+                                                            myData[key].lcl,
+                                                            myData[key].rmt,
+                                                            myData[key].tx_errno_avg,
+                                                            myData[key].rx_errno_avg,
+                                                            myData[key].retrans_avg,
+                                                            myData[key].color,
+                                                            myData[key].server_id_id]);
+                              }
+                         }
+                    }    
+                });
+}
+
+function statsForOneMachine(machine_id) {
+ $.ajax({
+            type: 'GET',
+            url: "/query_one_machine",
+            data: {machine_requested: machine_id},
+            dataType: 'text',
+            success: function(series) {
+                   table.fnClearTable();
+                   myData = JSON.parse(series);
+                    alert(series);
+                    for (var key in myData) {
+                               if (myData.hasOwnProperty(key)) {
+                                    //alert(myData[key].server_id_id);
+                                    table.fnAddData([
+                                                            timeFormatting(myData[key].timestamp),
+                                                            myData[key].lcl,
+                                                            myData[key].rmt,
+                                                            myData[key].tx_errno_avg,
+                                                            myData[key].rx_errno_avg,
+                                                            myData[key].retrans_avg,
+                                                            myData[key].color,
+                                                            myData[key].server_id_id]);
+                              }
+                         };
+                    }    
+                });
+}
+
+function thirtymin_graph_Data() {
+            $.ajax({url:"/thirtyMinGraphsUpdate", 
+                   method: 'GET',
+                    dataType: 'json',
+                   success: function(series){
+                               
+                               var JSONdata=eval(series);
+                               //alert(JSONdata[0].data);
+                               retrans_update = JSONdata[0].data;
+                               tx_errno_update = JSONdata[1].data;
+                              // alert(datasets[0].label); ///////////////////////////////////push update values to the end of the array!!!!
+                               new_array_retrans = datasets[0].data.concat(retrans_update);   
+                               new_array_tx_errno = datasets[1].data.concat(tx_errno_update);    
+                               datasets[0].data = new_array_retrans;
+                               datasets[1].data = new_array_tx_errno;
+                               $.plot(placeholder, datasets, options);
+                                var d = new Date();
+                                var localOffset = d.getTimezoneOffset() * 60000;
+                                var stamp = JSONdata[0].data[0][0] + localOffset;
+                                $('.time').html(timeFormatting(stamp));
+                                $('.retrans').html(JSONdata[0].data[0][1]);
+                                $('.errors').html(JSONdata[1].data[0][1]);
+                               
+                    }
+            });
+}
+
+var refreshIntervalIdAllMachines = setInterval(function(){statsUpdate();  thirtymin_graph_Data()}, 6000);
+//var refreshIntervalIdOneMAchine = setInterval(function(){statsUpdate();  thirtymin_graph_Data()}, 6000);
+
+var rows = $("#list_of_machines tr:gt(0)"); // skip the header row
+
+rows.each(function(index) {
+ $(this).click(function(){
+   var machineId = $(this).find("td:first").html();  
+   statsForOneMachine(machineId);
+   clearInterval(refreshIntervalIdAllMachines);
+ });
+})
+
+})
+</script>
+</head>
+<body>
+  <div class="container-fluid">
+  {% flatpage_menu %}
+      <div class="row-fluid">
+          <div class="span3 bs-docs-sidebar" style=" margin-top:10px;">
+          <br>
+          <br>
+    <ul class="nav nav-list bs-docs-sidenav">
+              <table class="bordered-table table" id="list_of_machines">
+        <thead>
+          <tr>
+            <th>Machine ID</th>
+            <th>IP address</th>
+
+          </tr>
+        </thead>
+        
+      <tbody>
+            {% for machine in all_machines %}
+            <tr id="link{{forloop.counter}}"><td>{{machine.server_id}} </td><td>  {{machine.ip_address}}</td></tr>
+             {% endfor %}
+             </tbody>
+             </table>
+    </ul>
+
+<!--    {% include 'partial.html' %} -->
+    <div id="placeholder1" style="width:300px;height:300px; margin-top:20px"; color="blue"></div>  
+        </div><!--/span-->
+        <div class="span9">
+    <div class="hero-unit" style="margin-top:10px;">
+    <table cellpadding="0" cellspacing="0" border="1" id="example" class="pretty">
+	<thead>
+		<tr>
+                         <th>connection time</th>
+                         <th class="rmt">lcl</th>
+                         <th class="rmt">rmt</th>
+                         <th class="rmt">rx_errno</th>
+                         <th class="lcl">tx_errno</th> 
+                         <th class="rmt">retrans</th>
+                          <th class="rmt">color</th>
+                          <th class="rmt">server_id</th>
+
+
+		</tr>
+	</thead>
+	<tbody>
+{% for item in my_list %}
+     <tr> 
+       <td class="datacellgreen">{{item.connection_time|date:"H:i:s"}}</td> 
+      <!--  <td >{% ifchanged %}{{item.rmt}} {%endifchanged%}</td> -->
+      <td class="datacellgreen">{{item.lcl}}</td>
+      <td class="datacellgreen">{{item.rmt}}</td>
+       <td class="datacellgreen">{{item.rx_errno_avg}}</td>
+       <td class="datacellgreen">{{item.tx_errno_avg}}</p></td> 
+       <td class="datacellgreen">{{item.retrans_avg}}</td>
+       <td  class="datacellgreen">{{item.color}}</td>
+       <td  class="datacellgreen">{{item.server_id_id}}</td>
+     </tr>
+{% endfor %}
+            
+	</tbody>
+	<tfoot>
+		<tr>
+                         <th>connection time</th>
+                         <th class="rmt">lcl</th>
+                         <th class="rmt">rmt</th>
+                         <th class="rmt">rx_errno</th>
+                         <th class="lcl">tx_errno</th> 
+                         <th class="rmt">retrans</th>
+                          <th class="rmt">color</th>
+                          <th class="rmt">server_id</th>
+		</tr>
+	</tfoot>
+</table>
+
+
+
+   <div class="row">
+        <div class="span8"  style="margin-left:5px";>
+          <div id="placeholder" style="width:800px;height:300px; margin-top:20px"; color="blue"></div>   
+          <p>time:<span class="time"> </span> Retransmissions:<span class="retrans"> </span>Errors:<span class="errors"> </span></p>
+        </div>
+   </div>
+</div>
+</div>
+</div>
+{% include 'footer.html' %}
+
+</body>
+</html>

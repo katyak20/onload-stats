@@ -1,0 +1,141 @@
+﻿{% load flatpage_menu %}
+<html>
+<head>
+
+    <script type="text/javascript" src="/site_media/admin/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="/site_media/table_js/sh_main.min.js"></script>
+    <script type="text/javascript" src="/site_media/table_js/sh_javascript.js"></script>
+    <script type="text/javascript" src="/site_media/table_js/jquery.fixedtable.js"></script>
+    <link href="/site_media/admin/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/site_media/admin/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+        <style type="text/css">
+        .fixedColumn .fixedTable td
+        {
+            color: #FFFFFF;
+            background-color: #589aca;
+            font-size: 12px;
+            font-weight: normal;
+        }
+        
+        .fixedHead td, .fixedFoot td
+        {
+            color: #FFFFFF;
+            background-color: #589aca;
+            font-size: 12px;
+            font-weight: normal;
+            padding: 5px;
+            min-width: 105px;
+            max-width: 105px;
+            border: 1px solid #187BAF;
+        }
+        .fixedTable td
+        {
+            font-size: 8.5pt;
+            background-color: #FFFFFF;
+            padding: 5px;
+            text-align: left;
+            min-width: 105px;
+            max-width: 105px;
+            border: 1px solid #CEE7FF;
+        }
+    </style>
+    <link type="text/css" rel="stylesheet" href="/site_media/styles.css">
+    <script type="text/javascript">
+        $(document).ready(function() {
+            sh_highlightDocument();
+            var i=0;
+
+            $(".tableDiv").each(function() {
+                var Id = $(this).get(0).id;
+                var maintbheight = 720;
+                var maintbwidth = 1000;
+
+                $("#" + Id + " .FixedTables").fixedTable({
+                    width: maintbwidth,
+                    height: maintbheight,
+                    fixedColumns: 2,
+                    classHeader: "fixedHead",
+                    classFooter: "fixedFoot",
+                    classColumn: "fixedColumn",
+                    fixedColumnWidth: 240,
+                    outerId: Id,
+                    Contentbackcolor: "#FFFFFF",
+                    Contenthovercolor: "#99CCFF",
+                    fixedColumnbackcolor:"#589aca",
+                    fixedColumnhovercolor:"#99CCFF"
+                });
+            });
+            
+            var table = $(".FixedColumn .FixedTable").dataTable();
+    
+             function statsUpdate() {
+            $.ajax({
+            type: 'GET',
+            url: "/statsUpdate",
+            dataType: 'text',
+            success: function(series) {
+                    table.fnAddData([
+                    series.rmt,
+                    series.color,
+                    ]);
+
+                   }    
+                });
+            }
+            
+setInterval(statsUpdate, 60000); 
+})
+    </script>
+</head>
+<body>
+{% flatpage_menu %}
+<div class="container">
+
+      <!-- Main hero unit for a primary marketing message or call to action -->
+    <div class="hero-unit">
+    <div id="tableDiv_Arrays" class="tableDiv">
+    <table id="Open_Text_Arrays" class="FixedTables">
+            <thead>
+                         <th class="rmt">rmt</th>
+                         <th>connection time</th>
+                         <th class="rmt">rx_errno</th>
+                         <th class="lcl">tx_errno</th> 
+                         <th class="rmt">retrans</th>
+                          <th class="rmt">color</th>
+
+
+                     </thead>
+            <tbody>
+{% for item in my_list %}
+     {% if  item.color == 'green' %}
+     <tr> 
+       <td >{% ifchanged %}{{item.rmt}} {%endifchanged%}</td> 
+       <td class="datacellgreen">{{item.connection_time|date:"H:i:s"}}</td> 
+       <td class="datacellgreen">{{item.rx_errno_avg}}</td>
+       <td class="datacellgreen">{{item.tx_errno_avg}}</p></td> 
+       <td class="datacellgreen">{{item.retrans_avg}}</td>
+       <td  class="datacellgreen">{{item.color}}</td>
+     </tr>
+     {% elif  item.color == 'red' %}
+     <tr> 
+       <td >{% ifchanged %}{{item.rmt}} {%endifchanged%}</td> 
+       <td class="datacellred">{{item.connection_time|date:"H:i:s"}} </td> 
+       <td class="datacellred">{{item.rx_errno_avg}}</td>
+       <td class="datacellred">{{item.tx_errno_avg}}</p></td> 
+       <td class="datacellred">{{item.retrans_avg}}</td>
+       <td  class="datacellred">{{item.color}}</td>
+     </tr>
+  {% endif %}
+{% endfor %}
+            </tbody>           
+        </table>
+    </div>
+    </div>
+    <span> sascascdasdasdasd</span>
+    <div class="row">
+
+    </div>
+ </div> 
+</body>
+</html>

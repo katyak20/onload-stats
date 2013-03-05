@@ -1,0 +1,70 @@
+{% load flatpage_menu %}
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="/site_media/admin/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="/site_media/table_js/sh_main.min.js"></script>
+    <script type="text/javascript" src="/site_media/table_js/sh_javascript.js"></script>
+   <script type="text/javascript" language="javascript" src="/site_media/DataTables/media/js/jquery.dataTables.js"></script>
+    <script language="javascript" type="text/javascript" src="/site_media/flot/excanvas.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/site_media/flot/jquery.flot.js"></script>
+    <link href="/site_media/admin/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/site_media/admin/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="/site_media/styles1.css">
+</head>
+<body>
+{% flatpage_menu %}
+<div class="container">
+      <!-- Main hero unit for a primary marketing message or call to action -->
+    <div class="hero-unit">
+     <hr>
+<div class="row">
+     <div class="span5" ><p> You can contact me at<a href="mailto:katya@pigottfamily.org"  style="font-size:110%;"> katya@pigottfamily.org</a></p></div>
+     <div class="span4" ><p style=" font-weight:bold;"> Specific projects <span style="color: rgb(255, 0, 0); padding-left: 2px;">*</span> </p></div>
+    </div>
+    <hr>
+   <div class="row"  style="margin-top: 10px;" >
+   <div class="span5" >
+   <p style="font-size:110%;"> You can contact me at<a href="mailto:katya@pigottfamily.org"> katya@pigottfamily.org</a></p>
+   <p style="font-size:110%;"> If you have specific requirements that you'd like to talk about, please fill the form on the right and I'll gert back to you to discuss them.
+  <p style="font-size:110%;"> Also if you''ve got some feedback on the site, I would love to hear it. And lastly if you want to connect through any of the following social websites, 
+  just click on the logo below.  </p>
+  
+  <a><img src="/site_media/img/linkedin_logo.png" style="max-widgth:200;"/> </img> </a>
+   </div>
+   <div class="span4" > 
+<form action="/contact/" method="post">{% csrf_token %}
+{{ form.as_p }}
+<input type="submit" value="Submit" />
+</form>
+</div>
+</div>
+</div>
+
+ {% include 'footer.html' %}
+
+
+</div>
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+    <script src="/site_media/bootstrap/prettify.js"></script>
+    <script src="/site_media/bootstrap/bootstrap-transition.js"></script>
+    <script src="/site_media/bootstrap/bootstrap-alert.js"></script>
+    <script src="/site_media/bootstrap/bootstrap-modal.js"></script>
+    <script src="/site_media/bootstrap/bootstrap-dropdown.js"></script>
+    <script src="/site_media/bootstrap/bootstrap-scrollspy.js"></script>
+    <script src="/site_media/bootstrap/bootstrap-tab.js"></script>
+    <script src="/site_media/bootstrap/bootstrap-tooltip.js"></script>
+    <script src="/site_media/bootstrap/bootstrap-popover.js"></script>
+    <script src="/site_media/bootstrap/bootstrap-button.js"></script>
+    <script src="/site_media/bootstrap/bootstrap-collapse.js"></script>
+    <script src="/site_media/bootstrap/bootstrap-carousel.js"></script>
+    <script src="/site_media/bootstrap/bootstrap-typeahead.js"></script>
+    <script src="/site_media/bootstrap/bootstrap-affix.js"></script>
+    <script src="/site_media/bootstrap/application.js"></script>
+
+</body>
+</html>

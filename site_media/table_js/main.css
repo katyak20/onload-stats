@@ -1,0 +1,41 @@
+
+A { color:black; }
+A:hover { color:#999; }
+BODY, TD 
+		{
+		font-family: Verdana, Geneva, Arial, sans-serif;
+		color: black;
+		font-size:13px;
+		}				
+BODY 
+		{
+		margin:0px;
+		padding:0px;
+		background-color:white;
+		}					
+IFRAME {display:block;}		
+#idiv {width:100%;border-top:1px solid #000;border-bottom:1px solid #000;
+background:#000 url(nullback.gif);
+}
+#banner {height:38px;margin-bottom:0px;border-bottom:1px solid #aaa;}
+#banner h1 {float:left;margin:0px;padding:10px;margin:0px;font-size:15px;}
+#banner h5 {float:left;margin:0px;padding:4px 0px 0px 10px;margin:0px;font:normal 9px/10px Verdana,Arial;white-space:wrap;width:150px;}
+#banner img {float:right;margin:10px 20px 0px 0px;cursor:pointer;cursor:hand;}
+#taskbar 
+	{
+	margin:0px;
+	padding-left:10px;
+	background-color:#639DCF;
+	height:100px;
+	border-top:1px solid #fff;
+	border-bottom:1px solid #fff;
+	}
+#taskbar a {float:right;margin-right:70px;}	
+#sizes {float:right;margin-top:82px;} 
+#sizes img {cursor:pointer;cursor:hand;}
+#controls {margin-top:20px;margin-left:0px;height:70px;float:left;padding:0px;width:38%;}
+#controls DIV {float:left;margin-bottom:10px;white-space:nowrap;}
+#controls SELECT {margin:0px 7px 0px 1px;}
+#footer {background-color:#639DCF;padding:20px;text-align:center;border-top:1px solid #fff;border-bottom:1px solid #000;}
+#info {padding:0px 30px;}
+#info LI {margin-bottom:30px;}

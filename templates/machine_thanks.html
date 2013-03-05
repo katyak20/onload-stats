@@ -1,0 +1,80 @@
+﻿{% load flatpage_menu %}
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="/site_media/admin/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="/site_media/table_js/sh_main.min.js"></script>
+    <script type="text/javascript" src="/site_media/table_js/sh_javascript.js"></script>
+   <script type="text/javascript" language="javascript" src="/site_media/DataTables/media/js/jquery.dataTables.js"></script>
+    <script language="javascript" type="text/javascript" src="/site_media/flot/excanvas.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/site_media/flot/jquery.flot.js"></script>
+    <link href="/site_media/admin/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/site_media/admin/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="/site_media/styles1.css">
+    <script type="text/javascript" charset="utf-8"></script>
+<style>
+    ul.errorlist 
+{
+margin: 0; 
+padding: 0;
+}
+.errorlist li 
+{
+background-color: red;
+color: white;
+display: block; 
+font-size: 10px; 
+margin: 0 0 3px; 
+padding: 4px 5px;
+}
+</style>
+</head>
+<body>
+{% flatpage_menu %}
+  <div class="container">
+<div class="hero-unit" style="margin-top:10px;">
+
+   <div class="row"  style="margin-top: 5px;" >
+   <hr>
+     <div class="span4" > <h4>Add machine</h4></div>
+     <div class="span5" > <h4>List of  machines</h4></div>
+
+   </div>
+        <hr>
+   <div class="row"  style="margin-top: 20px;" >
+   <div class="span4" > 
+
+<p style="color:red;">Machine has been added </p>
+   </div>
+<div class="span2">
+   <div class="tabbable tabs-left""style="margin-top: 40px;" > <!-- Only required for left/right tabs -->
+    <ul class="nav nav-tabs">
+    {% for machine in all_machines %}
+        {% if forloop.counter == 1 %}<li class="active"> 
+             {%else%}  <li>
+             {%endif%} 
+         <a href="#tab{{forloop.counter}}" data-toggle="tab">
+    {{machine.server_id}}</a></li>
+{% endfor %}
+    </ul>
+</div>
+</div>
+<div class="span3">
+    <div class="tab-content">
+{% for machine in all_machines %}
+             {% if forloop.counter == 1 %}<div class="tab-pane active" id="tab{{forloop.counter}}">
+             {%else%} <div class="tab-pane" id="tab{{forloop.counter}}">
+             {%endif%} 
+                   <p>{{machine.ip_address}}.</p>
+            </div>
+ {% endfor %}           
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+ {% include 'footer.html' %}
+  <script src="/site_media/admin/bootstrap/js/bootstrap-tab.js"></script>
+</body>
+</html>

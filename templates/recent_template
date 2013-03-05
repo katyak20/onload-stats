@@ -1,0 +1,252 @@
+﻿{% load flatpage_menu %}
+<html>
+<head>
+
+    <script type="text/javascript" src="/site_media/admin/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="/site_media/table_js/sh_main.min.js"></script>
+    <script type="text/javascript" src="/site_media/table_js/sh_javascript.js"></script>
+    <script type="text/javascript" src="/site_media/table_js/jquery.fixedtable.js"></script>
+    <link href="/site_media/admin/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/site_media/admin/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+        <style type="text/css">
+        .fixedColumn .fixedTable td
+        {
+            color: #FFFFFF;
+            background-color: #589aca;
+            font-size: 12px;
+            font-weight: normal;
+        }
+        
+        .fixedHead td, .fixedFoot td
+        {
+            color: #FFFFFF;
+            background-color: #589aca;
+            font-size: 12px;
+            font-weight: normal;
+            padding: 5px;
+            min-width: 105px;
+            max-width: 105px;
+            border: 1px solid #187BAF;
+        }
+        .fixedTable td
+        {
+            font-size: 8.5pt;
+            background-color: #FFFFFF;
+            padding: 5px;
+            text-align: left;
+            min-width: 105px;
+            max-width: 105px;
+            border: 1px solid #CEE7FF;
+        }
+    </style>
+    <link type="text/css" rel="stylesheet" href="/site_media/styles.css">
+    <script type="text/javascript">
+        $(document).ready(function() {
+            sh_highlightDocument();
+            var i=0;
+
+            $(".tableDiv").each(function() {
+                var Id = $(this).get(0).id;
+                var maintbheight = 720;
+                var maintbwidth = 1000;
+
+                $("#" + Id + " .FixedTables").fixedTable({
+                    width: maintbwidth,
+                    height: maintbheight,
+                    fixedColumns: 3,
+                    classHeader: "fixedHead",
+                    classFooter: "fixedFoot",
+                    classColumn: "fixedColumn",
+                    fixedColumnWidth: 360,
+                    outerId: Id,
+                    Contentbackcolor: "#FFFFFF",
+                    Contenthovercolor: "#99CCFF",
+                    fixedColumnbackcolor:"#589aca",
+                    fixedColumnhovercolor:"#99CCFF"
+                });
+            });
+    
+             function tableUpdate() {
+            $.ajax({
+            type: 'GET',
+            url: "/tableUpdate",
+            dataType: 'text',
+            success: function(series) {
+                        //alert(JSON.stringify(series));
+                        //alert(series);
+                        //var JSONdata=eval(series);
+                       // myData = JSON.parse('{"foo": 1, "bar": 2}');
+                        myData = JSON.parse(series);
+                        for (var key in myData) {
+                               if (myData.hasOwnProperty(key)) {
+                                $(".FixedColumn .FixedTable").prepend("<tr><td>{% ifchanged %}"+key+" {%endifchanged%}</td><td>"+myData[key].lcl+"</td><td>"+myData[key].rmt+"</td> </tr>");
+                                $(".fixedContainer .fixedTable").prepend("<tr><td>"+myData[key].rx_wake+"</td><td>"+myData[key].tx_wake+"</td><td>"+myData[key].rcvbuf+"</td><td>"+myData[key].sndbuf+"</td><td>"+myData[key].bindtodev+"</td> <td>"+myData[key].ttl+"</td><td>"+myData[key].rcvtimeo_ms+"</td><td>"+myData[key].sndtimeo_ms+"</td></tr>");
+                                //alert(key + " -> " + myData[key].rmt);
+                              }
+                         }
+
+                        //$(".FixedTable").prepend("<tr><td>"+JSONdata.key+"</td><td>"+JSONdata.data.lcl+"</td><td>"+JSONdata.data.rmt+"</td> </tr>");
+                        //$(".updatedTable").prepend("<tr><td>"+Date(JSONdata.key)+"</td><td>"+JSONdata.data.lcl+"</td><td>"+JSONdata.data.rmt+"</td> </tr>");
+                        //$(".FixedColumn .FixedTable").prepend("<tr><td>"+timeConverter(JSONdata.key)+"</td><td>"+JSONdata.data.lcl+"</td><td>"+JSONdata.data.rmt+"</td> </tr>");
+                        //$(".fixedContainer .fixedTable").prepend("<tr><td>"+JSONdata.data.rx_wake+"</td><td>"+myData[key].tx_wake+"</td><td>"+myData[key].rcvbuf+"</td><td>"+JSONdata.data.sndbuf+"</td><td>"+JSONdata.data.bindtodev+"</td> <td>"+JSONdata.data.ttl+"</td><td>"+JSONdata.data.rcvtimeo_ms+"</td><td>"+JSONdata.data.sndtimeo_ms+"</td></tr>");
+                        $('.FixedColumn .FixedTable tr:gt(40)').remove();
+                        $(".FixedContainer .FixedTable tr:gt(40)").remove();
+                        //deleteRows();
+                   }    
+        });
+}
+setInterval(tableUpdate, 60000); 
+})
+    </script>
+</head>
+<body>
+{% flatpage_menu %}
+<div class="container">
+
+      <!-- Main hero unit for a primary marketing message or call to action -->
+    <div class="hero-unit">
+    <div id="tableDiv_Arrays" class="tableDiv">
+    <table id="Open_Text_Arrays" class="FixedTables">
+            <thead>
+                         <th>connection time</th>
+                         <th class="lcl">lcl</th>
+                         <th class="rmt">rmt</th>
+                         <th class="lcl">rx_wake</th> 
+                         <th class="rmt">tx_wake</th>
+                         <th class="lcl">rcvbuf</th> 
+                         <th class="rmt">sndbuf</th>
+                         <th class="lcl">bindtodev</th> 
+                         <th class="rmt">rcvtimeo_ms</th>
+                         <th class="lcl">sndtimeo_ms</th> 
+                         <th class="rmt">rx_errno</th>
+                         <th class="lcl">tx_errno</th> 
+                         <th class="rmt">so_errno</th>
+                         <!--  <th class="lcl">up</th> -->
+                         <th class="rmt">una_nxt_max</th>
+                        <!--<th class="lcl">enq</th> -->
+                         <th class="rmt">send</th>
+                          <!-- <th class="lcl">send_pre</th> --> 
+                           <!-- <th class="rmt">inflight</th>  -->
+                         <th class="lcl">wnd</th> 
+                         <th class="rmt">unused</th>
+                         <th class="lcl">cwnd_0</th> 
+                         <th class="rmt">used</th>
+                         <th class="lcl">ssthresh</th> 
+                         <th class="rmt">bytes_acked</th>
+                           <!-- <th class="lcl">iff</th> -->
+                         <th class="rmt">mtu</th>
+                         <th class="lcl">intf_i</th> 
+                           <!-- <th class="rmt">vlan</th> -->
+                            <!--<th class="lcl">encap</th>  --> 
+                         <th class="rmt">rwnd</th>
+                            <!-- <th class="lcl">cwnd</th>  -->
+                         <th class="rmt">nagle</th>
+                            <!-- <th class="lcl">more</th> --> 
+                            <!--<th class="rmt">app</th> -->
+                         <th class="lcl">nxt_max</th> 
+                         <th class="rmt">current</th>
+                         <th class="lcl">rob_n</th> 
+                            <!-- <th class="rmt">recv1_n</th> -->
+                         <th class="lcl">recv2_n</th> 
+                             <!-- <th class="rmt">adv</th> -->
+                         <th class="lcl">cur</th> 
+                         <th class="rmt">usr</th>
+                            <!-- <th class="lcl">eff_mss</th> --> 
+                         <th class="rmt">smss</th>
+                         <th class="lcl">amss</th> 
+                         <th class="rmt">used_bufs</th>
+                         <th class="lcl">uid</th> 
+                         <th class="rmt">s</th>
+                            <!-- <th class="lcl">r</th> -->
+                            <!--<th class="rmt">srtt</th> -->
+                         <th class="lcl">rttvar</th> 
+                         <th class="rmt">rto</th>
+                         <th class="lcl">zwins</th> 
+                         <th class="rmt">retrans</th>
+                         <th class="lcl">dupacks</th> 
+                         <th class="rmt">rtos</th>
+                         <th class="lcl">frecs</th> 
+                         <th class="rmt">seqerr</th>
+                            <!-- <th class="lcl">ooo_pkts</th> --> 
+                              <!-- <th class="rmt">ooo</th>  -->
+                     </thead>
+            <tbody>
+{% for item in my_list %}
+    <tr>
+       <td >{% ifchanged %}{{item.connection_time|date:"H:i:s"}} {%endifchanged%}</td> 
+       <td class="rank">{{item.lcl}}</td> 
+       <td class="rank_2">{{item.rmt}}</td> 
+       <td class="rank">{{item.rx_wake}}</td>
+       <td class="rank_2">{{item.tx_wake}}</td> 
+       <td class="rank">{{item.rcvbuf}}</td>
+       <td class="rank_2">{{item.sndbuf}}</td> 
+       <td class="rank">{{item.bindtodev}}</td>
+       <td class="rank_2">{{item.ttl}}</td> 
+       <td class="rank">{{item.rcvtimeo_ms}}</td>
+       <td class="rank_2">{{item.sndtimeo_ms}}</td> 
+       <td class="rank">{{item.rx_errno}}</td>
+       <td class="rank_2">{{item.tx_errno}}</td> 
+       <td class="rank">{{item.so_errno}}</td>
+         <!-- <td class="rank_2">{{item.up}}</td> --> 
+       <td class="rank">{{item.una_nxt_max}}</td>
+          <!--<td class="rank_2">{{item.enq}}</td> --> 
+       <td class="rank">{{item.send}}</td>
+           <!-- <td class="rank_2">{{item.send_pre}}</td> --> 
+            <!-- <td class="rank">{{item.inflight}}</td> -->
+       <td class="rank_2">{{item.wnd}}</td> 
+       <td class="rank">{{item.unused}}</td>
+        <td class="rank">{{item.cwnd_0}}</td>
+       <td class="rank_2">{{item.used}}</td> 
+       <td class="rank">{{item.ssthresh}}</td>
+       <td class="rank_2">{{item.bytes_acked}}</td> 
+          <!-- <td class="rank">{{item.iff}}</td> -->
+       <td class="rank">{{item.mtu}}</td>
+       <td class="rank">{{item.intf_i}}</td>
+          <!-- <td class="rank">{{item.vlan}}</td> -->
+          <!--<td class="rank">{{item.encap}}</td> -->
+       <td class="rank">{{item.rwnd}}</td>
+          <!-- <td class="rank">{{item.cwnd}}</td> -->
+       <td class="rank">{{item.nagle}}</td>
+          <!-- <td class="rank">{{item.more}}</td> -->
+          <!--<td class="rank">{{item.app}}</td> -->
+       <td class="rank">{{item.nxt_max}}</td>
+       <td class="rank">{{item.current}}</td>
+       <td class="rank">{{item.rob_n}}</td>
+          <!--<td class="rank">{{item.recv1_n}}</td>-->
+       <td class="rank">{{item.recv2_n}}</td>
+          <!--<td class="rank">{{item.adv}}</td> -->
+       <td class="rank">{{item.cur}}</td>
+       <td class="rank">{{item.usr}}</td>
+          <!--<td class="rank">{{item.eff_mss}}</td> -->
+       <td class="rank">{{item.smss}}</td>
+       <td class="rank">{{item.amss}}</td>
+       <td class="rank">{{item.used_bufs}}</td>
+       <td class="rank">{{item.uid}}</td>
+       <td class="rank">{{item.sss}}</td>
+          <!-- <td class="rank">{{item.rrr}}</td> -->
+          <!-- <td class="rank">{{item.srtt}}</td> -->
+       <td class="rank">{{item.rttvar}}</td>
+       <td class="rank">{{item.rto}}</td>
+       <td class="rank">{{item.zwins}}</td>
+       <td class="rank">{{item.retrans}}</td>
+       <td class="rank">{{item.dupacks}}</td>
+       <td class="rank">{{item.rtos}}</td>
+       <td class="rank">{{item.frecs}}</td>
+       <td class="rank">{{item.seqerr}}</td>
+         <!--<td class="rank">{{item.ooo_pkts}}</td>-->
+         <!--<td class="rank">{{item.ooo}}</td>-->
+       <!--<td class="rank">{{item.flags}}</td>-->
+    </tr>
+{% endfor %}
+            </tbody>           
+        </table>
+    </div>
+    </div>
+    <span> sascascdasdasdasd</span>
+    <div class="row">
+
+    </div>
+ </div> 
+</body>
+</html>
