@@ -2,27 +2,7 @@
 import os
 
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
-STATIC_DOC_ROOT = os.path.join(os.getcwd(), 'site_media')
 
-ADMINS = (
-    ('Katya Pigott', 'katya@pigottfamily.org'),
-)
-
-SEND_BROKEN_LINK_EMAILS = True
-EMAIL_HOST = 'localhost'
-
-MANAGERS = ADMINS
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'onload',                      # Or path to database file if using sqlite3.
-        'USER': 'katya',                      # Not used with sqlite3.
-        'PASSWORD': 'gusachenko11',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-    }
 }
 
 # Local time zone for this installation. Choices can be found here:
